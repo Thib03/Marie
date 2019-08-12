@@ -132,7 +132,7 @@ function drawPortee() {
 function preload() {
   //clefSol = loadImage('clef_sol.png');
   //clefSol = createImg('https://ibb.co/LQKk4N1');
-  font = loadFont('font.otf');
+  font = loadFont('AmaticSC-Bold.ttf');
 }
 
 function setup() {
