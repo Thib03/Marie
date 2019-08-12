@@ -417,7 +417,7 @@ function homeScene() {
     fill(black);
     textAlign(CENTER,CENTER);
     textSize(0.075*dimension());
-    text("Nom de l'appliation",width/2,yt);
+    text("Nom de l'application",width/2,yt);
 
     for(let b = 0; b < homeButtons.length; b++) {
       homeButtons[b].draw();
