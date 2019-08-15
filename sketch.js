@@ -36,7 +36,7 @@ class Button {
                                 height/2+y-h/2);
     this.button.resize(l,h);
     this.button.color = 217;
-    this.button.cornerRadius = 0.025*dimension();
+    this.button.cornerRadius = 0.02*dimension();
     this.button.strokeWeight = 0;
     this.button.stroke = 0;
     this.button.text = '';
@@ -151,6 +151,7 @@ function setup() {
     manager.addScene(cartesScene);
     manager.addScene(lutherieScene);
     manager.addScene(compositeursScene);
+
   manager.showScene(homeScene);
 
   let e = 40;
@@ -246,13 +247,15 @@ function setup() {
   }
   solfegeButtons.push(button);
 
-  button = new Button('Retour',    -(l+e),yr,l,h/3);
+  largeur(2);
+
+  button = new Button('Retour',    -(l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(homeScene);
   }
   solfegeButtons.push(button);
 
-  button = new Button('Jouer',    l+e,yr,l,h/3);
+  button = new Button('Jouer',    (l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(solfegeGameScene);
   }
@@ -261,6 +264,8 @@ function setup() {
   //----------------------------------------------------------------------------
   //                           Aléatoire Buttons
   //----------------------------------------------------------------------------
+
+  largeur(3);
 
   button = new Button('Aucune\nrestriction',   -(l+e),y1,l,h);
   button.toggle(true);
@@ -325,7 +330,7 @@ function setup() {
 
   largeur(2);
 
-  button = new Button('Binaire',    -(l+e)/2,y1-(h+e)/4,l,(h-e)/2);
+  button = new Button('Lecture',    -(l+e)/2,y1-(h+e)/4,l,(h-e)/2);
   button.toggle(true);
   button.button.onPress = function() {
     solfegeMenu[1][2] = 0;
@@ -333,24 +338,24 @@ function setup() {
   }
   rythmeButtons.push(button);
 
-  button = new Button('Ternaire',     (l+e)/2,y1-(h+e)/4,l,(h-e)/2);
+  button = new Button('Écriture',     (l+e)/2,y1-(h+e)/4,l,(h-e)/2);
   button.button.onPress = function() {
     solfegeMenu[1][2] = 1;
     update(rythmeButtons,1,0,1);
   }
   rythmeButtons.push(button);
 
-  button = new Button('Lecture',      -(l+e)/2,y1+(h+e)/4,l,(h-e)/2);
+  button = new Button('Binaire',      -(l+e)/2,y1+(h+e)/4,l,(h-e)/2);
   button.toggle(true);
   button.button.onPress = function() {
-    solfegeMenu[1][2][0] = 0;
+    solfegeMenu[2] = 0;
     update(rythmeButtons,0,2);
   }
   rythmeButtons.push(button);
 
-  button = new Button('Écriture',     (l+e)/2,y1+(h+e)/4,l,(h-e)/2);
+  button = new Button('Ternaire',     (l+e)/2,y1+(h+e)/4,l,(h-e)/2);
   button.button.onPress = function() {
-    solfegeMenu[1][2][0] = 2;
+    solfegeMenu[2] = 1;
     update(rythmeButtons,1,2);
   }
   rythmeButtons.push(button);
@@ -359,15 +364,47 @@ function setup() {
   //                           Cartes Buttons
   //----------------------------------------------------------------------------
 
-  largeur(3);
+  //largeur(2);
 
-  button = new Button('Retour',    -(l+e),yr,l,h/3);
+  button = new Button('Main\ndroite',    -(l+e)/2,y0,l,h);
+  button.toggle(true);
+  button.button.onPress = function() {
+    cartesMenu[0] = 0;
+    update(cartesButtons,0,0,1);
+  }
+  cartesButtons.push(button);
+
+  button = new Button('Main\ngauche',     (l+e)/2,y0,l,h);
+  button.button.onPress = function() {
+    cartesMenu[0] = 1;
+    update(cartesButtons,1,0,1);
+  }
+  cartesButtons.push(button);
+
+  button = new Button('Littéral\n(nom)',      -(l+e)/2,y1,l,h);
+  button.toggle(true);
+  button.button.onPress = function() {
+    cartesMenu[1] = 0;
+    update(cartesButtons,0,2);
+  }
+  cartesButtons.push(button);
+
+  button = new Button('Carte\n(image)',     (l+e)/2,y1,l,h);
+  button.button.onPress = function() {
+    cartesMenu[1] = 1;
+    update(cartesButtons,1,2);
+  }
+  cartesButtons.push(button);
+
+  //largeur(3);
+
+  button = new Button('Retour',    -(l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(homeScene);
   }
   cartesButtons.push(button);
 
-  button = new Button('Jouer',    l+e,yr,l,h/3);
+  button = new Button('Jouer',    (l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(solfegeGameScene);
   }
@@ -377,13 +414,47 @@ function setup() {
   //                          Lutherie Buttons
   //----------------------------------------------------------------------------
 
-  button = new Button('Retour',    -(l+e),yr,l,h/3);
+  //largeur(2);
+
+  button = new Button('Violon',    -(l+e)/2,y0,l,h);
+  button.toggle(true);
+  button.button.onPress = function() {
+    lutherieMenu[0] = 0;
+    update(lutherieButtons,0,0,1);
+  }
+  lutherieButtons.push(button);
+
+  button = new Button('Archet',     (l+e)/2,y0,l,h);
+  button.button.onPress = function() {
+    lutherieMenu[0] = 1;
+    update(lutherieButtons,1,0,1);
+  }
+  lutherieButtons.push(button);
+
+  button = new Button('Par image',      -(l+e)/2,y1,l,h);
+  button.toggle(true);
+  button.button.onPress = function() {
+    lutherieMenu[1] = 0;
+    update(lutherieButtons,0,2);
+  }
+  lutherieButtons.push(button);
+
+  button = new Button('Par nom',     (l+e)/2,y1,l,h);
+  button.button.onPress = function() {
+    solfegeMenu[1] = 1;
+    update(lutherieButtons,1,2);
+  }
+  lutherieButtons.push(button);
+
+  //largeur(2);
+
+  button = new Button('Retour',    -(l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(homeScene);
   }
   lutherieButtons.push(button);
 
-  button = new Button('Jouer',    l+e,yr,l,h/3);
+  button = new Button('Jouer',    (l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(solfegeGameScene);
   }
@@ -393,13 +464,15 @@ function setup() {
   //                        Compositeurs Buttons
   //----------------------------------------------------------------------------
 
-  button = new Button('Retour',    -(l+e),yr,l,h/3);
+  //largeur(2);
+
+  button = new Button('Retour',    -(l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(homeScene);
   }
   compositeursButtons.push(button);
 
-  button = new Button('Jouer',    l+e,yr,l,h/3);
+  button = new Button('Jouer',    (l+e)/2,yr,l,h/2);
   button.button.onPress = function() {
     manager.showScene(solfegeGameScene);
   }
