@@ -65,10 +65,10 @@ class Button {
   drawText() {
     fill(this.tc);
     textAlign(CENTER,CENTER);
-    textSize(0.0003*sqrt(this.l*this.h)*dimension());
+    textSize(0.2*pow(pow(this.l,2)*this.h,1/3));
     textFont(font);
     text(this.t,width/2+this.x,
-                   height/2+this.y-0.00005*sqrt(this.l*this.h)*dimension());//+0.3*this.h);
+                   height/2+this.y-0.035*sqrt(this.l*this.h));//+0.3*this.h);
   }
 
   draw() {
