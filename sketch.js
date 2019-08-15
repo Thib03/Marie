@@ -36,7 +36,7 @@ class Button {
                                 height/2+y-h/2);
     this.button.resize(l,h);
     this.button.color = 217;
-    this.button.cornerRadius = 5;
+    this.button.cornerRadius = 0.025*dimension();
     this.button.strokeWeight = 0;
     this.button.stroke = 0;
     this.button.text = '';
@@ -65,10 +65,10 @@ class Button {
   drawText() {
     fill(this.tc);
     textAlign(CENTER,CENTER);
-    textSize(0.045*dimension());
+    textSize(0.0003*sqrt(this.l*this.h)*dimension());
     textFont(font);
     text(this.t,width/2+this.x,
-                   height/2+this.y-0.009*dimension());//+0.3*this.h);
+                   height/2+this.y-0.00005*sqrt(this.l*this.h)*dimension());//+0.3*this.h);
   }
 
   draw() {
@@ -416,8 +416,8 @@ function homeScene() {
 
     fill(black);
     textAlign(CENTER,CENTER);
-    textSize(0.075*dimension());
-    text("Nom de l'application",width/2,yt);
+    textSize(0.12*dimension());
+    text("Ceci est un titre",width/2,yt);
 
     for(let b = 0; b < homeButtons.length; b++) {
       homeButtons[b].draw();
@@ -431,7 +431,7 @@ function solfegeMenuScene() {
 
     fill(black);
     textAlign(CENTER,CENTER);
-    textSize(0.075*dimension());
+    textSize(0.1*dimension());
     text("Solfège",width/2,yt);
 
     for(let b = 0; b < solfegeButtons.length; b++) {
@@ -456,7 +456,7 @@ function solfegeGameScene() {
 
     fill(black);
     textAlign(CENTER,CENTER);
-    textSize(0.075*dimension());
+    textSize(0.1*dimension());
     text("Not yet...",width/2,yt);
     textSize(0.03*dimension());
     text("(actualise la page)",width/2,2*yt);
@@ -469,7 +469,7 @@ function cartesScene() {
 
     fill(black);
     textAlign(CENTER,CENTER);
-    textSize(0.075*dimension());
+    textSize(0.1*dimension());
     text("Cartes",width/2,yt);
 
     for(let b = 0; b < cartesButtons.length; b++) {
@@ -484,7 +484,7 @@ function lutherieScene() {
 
     fill(black);
     textAlign(CENTER,CENTER);
-    textSize(0.075*dimension());
+    textSize(0.1*dimension());
     text("Lutherie",width/2,yt);
 
     for(let b = 0; b < lutherieButtons.length; b++) {
@@ -499,7 +499,7 @@ function compositeursScene() {
 
     fill(black);
     textAlign(CENTER,CENTER);
-    textSize(0.075*dimension());
+    textSize(0.1*dimension());
     text("Compositeurs",width/2,yt);
 
     for(let b = 0; b < compositeursButtons.length; b++) {
