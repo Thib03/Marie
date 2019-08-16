@@ -49,13 +49,13 @@ class Button {
     this.l = l;
     this.h = h;
 
-    this.button.onOutside = function() {
+    /*this.button.onOutside = function() {
       cursor(ARROW);
-    }
+    }*/
 
-    this.button.onHover = function(){
+    /*this.button.onHover = function(){
       cursor(HAND);
-    }
+    }*/
 
     /*this.button.onRelease = function(){
       this.color = 255;
