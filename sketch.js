@@ -693,6 +693,25 @@ var MIN_SAMPLES = 0;
 var GOOD_ENOUGH_CORRELATION = 0.9;
 var mic;
 
+function pcToName(pc) {
+  let name = '';
+  switch(pc) {
+    case 0: name = 'do'; break;
+    case 1: name = 'réb'; break;
+    case 2: name = 'ré'; break;
+    case 3: name = 'mib'; break;
+    case 4: name = 'mi'; break;
+    case 5: name = 'fa'; break;
+    case 6: name = 'solb'; break;
+    case 7: name = 'sol'; break;
+    case 8: name = 'lab'; break;
+    case 9: name = 'la'; break;
+    case 10:name = 'sib'; break;
+    case 11:name = 'si'; break;
+  }
+  return name;
+}
+
 function solfegeGameScene() {
   this.setup = function() {
     notes = [new Note()];
@@ -701,6 +720,10 @@ function solfegeGameScene() {
     mic.start();
     fft = new p5.FFT();
     fft.setInput(mic);
+
+    userStartAudio().then(function() {
+     console.log('Audio started');
+   });
   }
 
   this.draw = function() {
@@ -709,7 +732,11 @@ function solfegeGameScene() {
     buf = fft.waveform();
     freq = autoCorrelate(buf, sampleRate() );
 
-    console.log(mic.getLevel());
+    if(mic.getLevel() > 0.05 && freq > 0){
+      let name = pcToName(round(12*log(freq/16.3515)/log(2))%12);
+      textSize(50);
+      text(name,width/2,height/2);
+    }
 
     /*fps = frameRate();
     if (fps > 10) {
