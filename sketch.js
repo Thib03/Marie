@@ -33,6 +33,7 @@ var grey = 87;
 var black = 0;
 
 var font;
+var musicFont;
 
 var colorSolfege = '#6D9EEB';
 var colorCartes = '#92C47D';
@@ -100,13 +101,23 @@ class Button {
   }
 }
 
-class Note {
-  constructor() {
-    this.nMin = 26;
-    this.nMid = 34;
-    this.nMax = 42;
+let middleNote = 7*4+6;
 
-    this.pitch = floor(random(this.nMin,this.nMax+1));
+class Note {
+  constructor(d, a, o) {
+    /*this.nMin = 55;
+    this.nMax = 83;
+
+    this.pitch = floor(random(this.nMin,this.nMax+1));*/
+
+    this.deg = d;
+    this.alt = a;
+    this.oct = o;
+
+    this.degPitch = 7*this.oct+this.deg;
+
+    this.pitch = 12*(this.oct+1)+degToNdt(this.deg+1)+this.alt;
+
     this.x = width - 1.8 * marge;
 
     this.adjustY();
@@ -114,7 +125,7 @@ class Note {
   }
 
   adjustY() {
-    this.y = height/2 + (this.nMid-this.pitch)*marge/2 + 1.6*dy;
+    this.y = height/2 + (middleNote-this.degPitch)*marge/2 + 1.6*dy;
   }
 
   setColour(c) {
@@ -133,27 +144,34 @@ class Note {
     rotate(0.4);
     translate(-this.x - sqrt(marge) / 40, -this.y - sqrt(marge) / 40);
 
+    if(this.alt) {
+      textFont(musicFont);
+      textSize(5.1*marge);
+      text(this.alt==1?'<':'>', this.x-1.4*marge, this.y-0.5*marge);
+      textFont(font);
+    }
+
     stroke(this.colour);
 
-    var hauteur = this.pitch;
+    var hauteur = this.degPitch;
 
-    if (hauteur <= this.nMid) {
+    if (hauteur <= middleNote) {
       line(this.x + 0.54 * marge, this.y - 0.1 * marge,
            this.x + 0.54 * marge, this.y - 3 * marge);
-      while(hauteur < this.nMid-4) {
-        if((this.nMid-hauteur)%2 == 0) {
-          line(this.x - 0.8 * marge, this.y - (hauteur-this.pitch)*marge/2,
-               this.x + 0.8 * marge, this.y - (hauteur-this.pitch)*marge/2);
+      while(hauteur < middleNote-4) {
+        if((middleNote-hauteur)%2 == 0) {
+          line(this.x - 0.8 * marge, this.y - (hauteur-this.degPitch)*marge/2,
+               this.x + 0.8 * marge, this.y - (hauteur-this.degPitch)*marge/2);
         }
         hauteur++;
       }
     } else {
       line(this.x - 0.54 * marge, this.y + 0.1 * marge,
            this.x - 0.54 * marge, this.y + 3 * marge);
-      while(hauteur > this.nMid+4) {
-        if((hauteur-this.nMid)%2 == 0) {
-          line(this.x - 0.8 * marge, this.y + (this.pitch-hauteur)*marge/2,
-               this.x + 0.8 * marge, this.y + (this.pitch-hauteur)*marge/2);
+      while(hauteur > middleNote+4) {
+        if((hauteur-middleNote)%2 == 0) {
+          line(this.x - 0.8 * marge, this.y + (this.degPitch-hauteur)*marge/2,
+               this.x + 0.8 * marge, this.y + (this.degPitch-hauteur)*marge/2);
         }
         hauteur--;
       }
@@ -176,6 +194,54 @@ class Note {
 //------------------------------------------------------------------------------
 //              Functions
 //------------------------------------------------------------------------------
+
+function deg(d)
+{
+	return ((d-1) % 7 + 7) % 7 + 1;
+}
+
+function ndt(n)
+{
+	return (n % 12 + 12) % 12;
+}
+
+function alt(a)
+{
+  return ((a+5) % 12 + 12) % 12 - 5;
+}
+
+function degToNdt(d) {
+  d = deg(d);
+  switch(d) {
+    case 1:
+      return 0;
+    case 2:
+			return 2;
+    case 3:
+			return 4;
+    case 4:
+			return 5;
+    case 5:
+			return 7;
+    case 6:
+			return 9;
+		case 7:
+			return 11;
+  }
+}
+
+function ndtToDeg(n) {
+  switch(ndt(n)){
+    case 0: return 1;
+    case 2: return 2;
+    case 4: return 3;
+    case 5: return 4;
+    case 7: return 5;
+    case 9: return 6;
+    case 11:return 7;
+    default: return false;
+  }
+}
 
 function dimension() {
   return sqrt(width*height);
@@ -236,6 +302,9 @@ function resize(type) {
     rythmeButtons[1].set((l+e)/2,y1-(h+e)/4,l,(h-e)/2);
     rythmeButtons[2].set(-(l+e)/2,y1+(h+e)/4,l,(h-e)/2);
     rythmeButtons[3].set((l+e)/2,y1+(h+e)/4,l,(h-e)/2);
+    for(let n = 0; n < notes.length; n++) {
+      notes[n].adjustY();
+    }
     break;
     case 'cartes':
     largeur(2);
@@ -326,6 +395,7 @@ function preload() {
   //clefSol = createImg('https://ibb.co/LQKk4N1');
   //font = loadFont('AmaticSC-Bold.ttf');
   font = loadFont('OLDSH___.TTF');
+  musicFont = loadFont('musicFont.ttf');
 }
 
 function setup() {
@@ -714,7 +784,7 @@ function pcToName(pc) {
 
 function solfegeGameScene() {
   this.setup = function() {
-    notes = [new Note()];
+    //notes = [new Note()];
 
     mic = new p5.AudioIn()
     mic.start();
@@ -732,13 +802,18 @@ function solfegeGameScene() {
     buf = fft.waveform();
     freq = autoCorrelate(buf, sampleRate() );
 
+    let pitch;
+
     if(mic.getLevel() > 0.05 && freq > 0){
-      let name = pcToName(round(12*log(freq/16.3515)/log(2))%12);
-      textSize(50);
-      text(name,width/2,height/2);
+      pitch = round(12*log(freq/16.3515)/log(2))+12;
+      //textSize(50);
+      //text(pitch.toString(),width/2,height/2);
+      if(pitch == notes[0].pitch) {
+        notes.splice(0,1);
+      }
     }
 
-    /*fps = frameRate();
+    fps = frameRate();
     if (fps > 10) {
       difficulty = (Math.log(notes.length / 5 + 2) + 0.5);
       vitesse = 0.05 * difficulty * (width - 7 * marge) / fps;
@@ -751,20 +826,19 @@ function solfegeGameScene() {
       notes[n].draw();
     }
 
-    if (notes[notes.length - 1].position() < 5 * marge + 8.5 * (width - 7 * marge) / 10) {
-      notes.push(new Note());
+    if (!notes.length || notes[notes.length - 1].position() < 5 * marge + 8.5 * (width - 7 * marge) / 10) {
+      let deg = floor(random(0,7));
+      let oct = floor(random(deg<4?4:3,6));
+      //let alt = floor(random(deg==4&&oct==3?0:-1,deg==6&&oct==5?1:2));
+      let alt = 0;
+      console.log(alt);
+      notes.push(new Note(deg,alt,oct));
+      //console.log(notes[notes.length-1].pitch);
     }
 
     if (notes[0].position() < 5 * marge) { // a atteint la clef
-      //notes.splice(0,1);
-      if (button != -1) {
-        checkAnswer();
-      } else if (!hasLost){
-        lostMessage = '';
-        loose();
-        time = millis();
-      }
-    }*/
+      notes.splice(0,1);
+    }
   }
 }
 
